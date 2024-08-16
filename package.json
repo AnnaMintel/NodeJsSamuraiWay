@@ -1,0 +1,22 @@
+{
+  "name": "NodeJsSamuraiWay",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:AnnaMintel/NodeJsSamuraiWay.git",
+  "author": "AnnaMintel <hintell@proton.me>",
+  "license": "MIT",
+  "scripts": {
+    "watch": "tsc -w",
+    "dev": "nodemon .//dist//index.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.3.0",
+    "nodemon": "^3.1.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
+  }
+}
