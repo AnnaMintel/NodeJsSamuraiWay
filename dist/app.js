@@ -23,20 +23,29 @@ const db = {
         { id: 4, title: "Python" },
     ],
 };
-exports.app.get("/courses", (req, res) => {
+exports.app.get("/courses", (req, // uriParams resBody reqBody Query
+res) => {
     let foundCourses = db.courses;
     if (req.query.title) {
         foundCourses = foundCourses.filter((el) => el.title.indexOf(req.query.title) > -1);
     }
-    res.json(foundCourses);
+    res.json(foundCourses.map(dbCourse => {
+        return {
+            id: dbCourse.id,
+            title: dbCourse.title
+        };
+    }));
 });
 exports.app.get("/courses/:id", (req, res) => {
-    const searchCourse = db.courses.find((el) => el.id === +req.params.id);
+    let searchCourse = db.courses.find((el) => el.id === +req.params.id);
     if (!searchCourse) {
         res.sendStatus(exports.HTTP_STATUSES.NOT_FOUND_404);
         return;
     }
-    res.json(searchCourse);
+    res.json({
+        id: searchCourse.id,
+        title: searchCourse.title
+    });
 });
 exports.app.post("/courses", (req, res) => {
     if (!req.body.title) {
@@ -51,6 +60,7 @@ exports.app.post("/courses", (req, res) => {
     res.status(exports.HTTP_STATUSES.CREATED_201).json(createdCourse);
 });
 exports.app.delete("/courses/:id", (req, res) => {
+    // если отправляем статус, просто респонс без параметров (выше)
     db.courses = db.courses.filter((el) => el.id !== +req.params.id);
     res.sendStatus(exports.HTTP_STATUSES.NO_CONTENT_204);
 });
@@ -60,8 +70,8 @@ exports.app.put("/courses/:id", (req, res) => {
         res.sendStatus(exports.HTTP_STATUSES.NOT_FOUND_404);
         return;
     }
-    if (!req.body.title || typeof req.body.title !== 'string')
-        (res.sendStatus(exports.HTTP_STATUSES.BAD_REQUEST_400));
+    if (!req.body.title || typeof req.body.title !== "string")
+        res.sendStatus(exports.HTTP_STATUSES.BAD_REQUEST_400);
     searchCourse.title = req.body.title;
     res.sendStatus(exports.HTTP_STATUSES.NO_CONTENT_204);
 });
